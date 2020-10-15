@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import clear from 'rollup-plugin-clear';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -36,6 +37,12 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		clear({
+			// required, point out which directories should be clear.
+			targets: ['public/build'],
+			// optional, whether clear the directores when rollup recompile on --watch mode.
+			watch: false, // default: false
+		}),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
