@@ -5,6 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
+import htmlTemplate from 'rollup-plugin-generate-html-template'
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -35,7 +36,7 @@ export default {
 		sourcemap: !production,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/bundle.js'
 	},
 	plugins: [
 		clear({
@@ -53,10 +54,18 @@ export default {
 				css.write('bundle.css', !production);
 			}
 		}),
+		htmlTemplate({
+			template: 'src/template.html',
+			target: 'public/index.html',
+			attrs: ['async']
+		}),
 		copy({
 			targets: [{
 				src: 'src/images/*',
 				dest: 'public/images/'
+			}, {
+				src: 'src/*.css',
+				dest: 'public/'
 			}],
 			verbose: true,
 			copyOnce: true
