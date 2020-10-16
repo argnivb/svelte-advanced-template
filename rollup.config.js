@@ -5,7 +5,8 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
-import htmlTemplate from 'rollup-plugin-generate-html-template'
+import htmlTemplate from 'rollup-plugin-generate-html-template';
+import sveltePreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -33,7 +34,7 @@ function serve() {
 export default {
 	input: 'src/main.js',
 	output: {
-		sourcemap: !production,
+		sourcemap: true,
 		format: 'iife',
 		name: 'app',
 		file: 'public/bundle.js'
@@ -46,6 +47,12 @@ export default {
 			watch: false, // default: false
 		}),
 		svelte({
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+				postcss: {
+					plugins: [require('autoprefixer')()]
+				}
+			}),
 			// enable run-time checks when not in production
 			dev: !production,
 			// we'll extract any component CSS out into
